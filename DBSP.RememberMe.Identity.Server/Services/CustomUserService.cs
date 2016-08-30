@@ -91,10 +91,17 @@ namespace DBSP.RememberMe.Identity.Server.Services
       return Task.FromResult(0);
     }
 
+    private bool disposed = false;
+
     public void Dispose()
     {
-      Dispose(true);
-      GC.SuppressFinalize(this);
+      if (!disposed)
+      {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+      }
+
+      disposed = true;
     }
 
     private void Dispose(bool disposing)

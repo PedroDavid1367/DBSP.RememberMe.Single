@@ -60,9 +60,10 @@ namespace DBSP.RememberMe.Identity.Server
           Factory = idServerServiceFactory,
 
           // Just for Angular 2 App testing.
+          // TODO: Get valid SSL certificates.
           RequireSsl = false,
 
-          SiteName = "TripCompany Security Token Service",
+          SiteName = "Security Service Token for RememberMe application.",
           SigningCertificate = LoadCertificate(),
           IssuerUri = DBSP.RememberMe.Identity.Constants.TripGalleryIssuerUri,
           PublicOrigin = DBSP.RememberMe.Identity.Constants.TripGallerySTSOrigin,
@@ -88,6 +89,7 @@ namespace DBSP.RememberMe.Identity.Server
             // FrameSrc = "*" for all URI's.
           }
         };
+
         idsrvApp.UseIdentityServer(options);
       });
     }

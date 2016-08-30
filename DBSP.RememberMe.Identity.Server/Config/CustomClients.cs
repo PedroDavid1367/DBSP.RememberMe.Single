@@ -67,8 +67,8 @@ namespace DBSP.RememberMe.Identity.Server.Config
           ClientName = "Trip Gallery (Implicit - Angular2)",
           Flow = Flows.Implicit,
           AllowAccessToAllScopes = true,
-          IdentityTokenLifetime = 10,
-          AccessTokenLifetime = 120,
+          //IdentityTokenLifetime = 10,
+          //AccessTokenLifetime = 120,
           RequireConsent = false,
 
           RedirectUris = new List<string>

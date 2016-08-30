@@ -46,7 +46,7 @@ namespace DBSP.RememberMe.Identity.Server.Controllers
     {
       if (ModelState.IsValid)
       {
-        // create a user
+        // Create a user.
         var password = HashHelper.Sha512(model.UserName + model.Password);
 
         var user = new ApplicationUser
@@ -70,28 +70,34 @@ namespace DBSP.RememberMe.Identity.Server.Controllers
             UserManager.AddClaim(userRetrieved.Id,
               new Claim(IdentityServer3.Core.Constants.ClaimTypes.FamilyName, model.LastName));
             UserManager.AddClaim(userRetrieved.Id,
-              new Claim("role", model.Role));
+              new Claim(IdentityServer3.Core.Constants.ClaimTypes.Role, model.Role));
             UserManager.AddClaim(userRetrieved.Id,
-              new Claim("address", model.Address));
+              new Claim(IdentityServer3.Core.Constants.ClaimTypes.Address, model.Address));
             UserManager.AddClaim(userRetrieved.Id,
-              new Claim("email", model.Email));
+              new Claim(IdentityServer3.Core.Constants.ClaimTypes.Email, model.Email));
           }
         }
-        // redirect to the login page, passing in 
+        // Redirect to the login page, passing in 
         // the signin parameter
         return Redirect("~/identity/" + IdentityServer3.Core.Constants.RoutePaths.Login + "?signin=" + signin);
       }
       return View();
     }
 
+    private bool disposed = false;
+
     protected override void Dispose(bool disposing)
     {
-      if (disposing && _userManager != null)
+      if (!disposed)
       {
-        _userManager.Dispose();
-        _userManager = null;
+        if (disposing && _userManager != null)
+        {
+          _userManager.Dispose();
+          _userManager = null;
+        }
       }
 
+      disposed = true;
       base.Dispose(disposing);
     }
   }
