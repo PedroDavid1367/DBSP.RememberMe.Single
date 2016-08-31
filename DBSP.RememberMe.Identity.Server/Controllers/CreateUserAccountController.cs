@@ -116,6 +116,7 @@ namespace DBSP.RememberMe.Identity.Server.Controllers
 
     protected override void Dispose(bool disposing)
     {
+      System.Diagnostics.Debug.WriteLine("Dispose(bool disposing) was called on CreateUserAccountController");
       if (!_disposed)
       {
         if (disposing && _uow != null)
