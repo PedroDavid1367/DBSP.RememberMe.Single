@@ -1,5 +1,6 @@
 ﻿using DBSP.RememberMe.Identity.DAL;
 using DBSP.RememberMe.Identity.DAL.Managers;
+using DBSP.RememberMe.Identity.DAL.Repositories;
 using DBSP.RememberMe.Identity.Model;
 using DBSP.RememberMe.Identity.Server.Config;
 using DBSP.RememberMe.Identity.Server.Services;
@@ -22,6 +23,8 @@ namespace DBSP.RememberMe.Identity.Server
       // Configure the db context and user manager to use a single instance per request
       app.CreatePerOwinContext(ApplicationDbContext.Create);
       app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
+      app.CreatePerOwinContext<UsersRepository>(UsersRepository.Create);
+      app.CreatePerOwinContext<UnitOfWork>(UnitOfWork.Create);
 
       app.Map("/identity", idsrvApp =>
       {
@@ -48,9 +51,21 @@ namespace DBSP.RememberMe.Identity.Server
         {
           return new UserStore<ApplicationUser>(resolver.Resolve<ApplicationDbContext>());
         }));
+
         idServerServiceFactory.Register(new Registration<UserManager<ApplicationUser>>(resolver =>
         {
           return new ApplicationUserManager(resolver.Resolve<UserStore<ApplicationUser>>());
+        }));
+
+        idServerServiceFactory.Register(new Registration<UsersRepository>(resolver =>
+        {
+          return new UsersRepository(resolver.Resolve<ApplicationUserManager>());
+        }));
+
+        idServerServiceFactory.Register(new Registration<UnitOfWork>(resolver =>
+        {
+          return new UnitOfWork(resolver.Resolve<ApplicationDbContext>(),
+            resolver.Resolve<UsersRepository>());
         }));
 
         idServerServiceFactory.UserService = new Registration<IUserService, CustomUserService>();

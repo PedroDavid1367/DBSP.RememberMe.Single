@@ -1,10 +1,9 @@
-﻿using DBSP.RememberMe.Identity.DAL.Managers;
+﻿using DBSP.RememberMe.Identity.DAL;
 using DBSP.RememberMe.Identity.Helpers;
 using DBSP.RememberMe.Identity.Model;
 using DBSP.RememberMe.Identity.Server.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using System.Linq;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
@@ -13,26 +12,45 @@ namespace DBSP.RememberMe.Identity.Server.Controllers
 {
   public class CreateUserAccountController : Controller
   {
-    private ApplicationUserManager _userManager;
+    //private ApplicationUserManager _userManager;
+    private UnitOfWork _uow;
+    private bool _disposed = false;
 
     public CreateUserAccountController() { }
 
-    public CreateUserAccountController(ApplicationUserManager userManager)
+    //public CreateUserAccountController(ApplicationUserManager userManager)
+    //{
+    //  UserManager = userManager;
+    //}
+
+    public CreateUserAccountController(UnitOfWork unitOfWork)
     {
-      UserManager = userManager;
+      UnitOfWork = unitOfWork;
     }
 
-    public ApplicationUserManager UserManager
+    public UnitOfWork UnitOfWork
     {
       get
       {
-        return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        return _uow ?? Request.GetOwinContext().Get<UnitOfWork>();
       }
       private set
       {
-        _userManager = value;
+        _uow = value;
       }
     }
+
+    //public ApplicationUserManager UserManager
+    //{
+    //  get
+    //  {
+    //    return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
+    //  }
+    //  private set
+    //  {
+    //    _userManager = value;
+    //  }
+    //}
 
     // GET: CreateUserAccount
     [HttpGet]
@@ -56,25 +74,37 @@ namespace DBSP.RememberMe.Identity.Server.Controllers
           Password = password,
           Email = model.Email
         };
-        var createdUser = UserManager.Create(user, model.Password);
+        //var createdUser = UserManager.Create(user, model.Password);
+        var createdUser = UnitOfWork.UsersRepository.CreateUser(user, model.Password);
 
         if (createdUser.Succeeded)
         {
-          var userRetrieved = UserManager.Users
-            .FirstOrDefault(u => u.UserName == model.UserName && u.Password == password);
+          //var userRetrieved = UserManager.Users
+          //  .FirstOrDefault(u => u.UserName == model.UserName && u.Password == password);
+          var userRetrieved = UnitOfWork.UsersRepository.GetUser(model.UserName, password);
 
           if (userRetrieved != null)
           {
-            UserManager.AddClaim(userRetrieved.Id,
-              new Claim(IdentityServer3.Core.Constants.ClaimTypes.GivenName, model.FirstName));
-            UserManager.AddClaim(userRetrieved.Id,
-              new Claim(IdentityServer3.Core.Constants.ClaimTypes.FamilyName, model.LastName));
-            UserManager.AddClaim(userRetrieved.Id,
-              new Claim(IdentityServer3.Core.Constants.ClaimTypes.Role, model.Role));
-            UserManager.AddClaim(userRetrieved.Id,
-              new Claim(IdentityServer3.Core.Constants.ClaimTypes.Address, model.Address));
-            UserManager.AddClaim(userRetrieved.Id,
-              new Claim(IdentityServer3.Core.Constants.ClaimTypes.Email, model.Email));
+            //UserManager.AddClaim(userRetrieved.Id,
+            //  new Claim(IdentityServer3.Core.Constants.ClaimTypes.GivenName, model.FirstName));
+            //UserManager.AddClaim(userRetrieved.Id,
+            //  new Claim(IdentityServer3.Core.Constants.ClaimTypes.FamilyName, model.LastName));
+            //UserManager.AddClaim(userRetrieved.Id,
+            //  new Claim(IdentityServer3.Core.Constants.ClaimTypes.Role, model.Role));
+            //UserManager.AddClaim(userRetrieved.Id,
+            //  new Claim(IdentityServer3.Core.Constants.ClaimTypes.Address, model.Address));
+            //UserManager.AddClaim(userRetrieved.Id,
+            //  new Claim(IdentityServer3.Core.Constants.ClaimTypes.Email, model.Email));
+            UnitOfWork.UsersRepository.AddClaim(userRetrieved.Id,
+              IdentityServer3.Core.Constants.ClaimTypes.GivenName, model.FirstName);
+            UnitOfWork.UsersRepository.AddClaim(userRetrieved.Id,
+              IdentityServer3.Core.Constants.ClaimTypes.FamilyName, model.LastName);
+            UnitOfWork.UsersRepository.AddClaim(userRetrieved.Id,
+              IdentityServer3.Core.Constants.ClaimTypes.Role, model.Role);
+            UnitOfWork.UsersRepository.AddClaim(userRetrieved.Id,
+              IdentityServer3.Core.Constants.ClaimTypes.Address, model.Address);
+            UnitOfWork.UsersRepository.AddClaim(userRetrieved.Id,
+              IdentityServer3.Core.Constants.ClaimTypes.Email, model.Email);
           }
         }
         // Redirect to the login page, passing in 
@@ -84,20 +114,18 @@ namespace DBSP.RememberMe.Identity.Server.Controllers
       return View();
     }
 
-    private bool disposed = false;
-
     protected override void Dispose(bool disposing)
     {
-      if (!disposed)
+      if (!_disposed)
       {
-        if (disposing && _userManager != null)
+        if (disposing && _uow != null)
         {
-          _userManager.Dispose();
-          _userManager = null;
+          _uow.Dispose();
+          _uow = null;
         }
       }
 
-      disposed = true;
+      _disposed = true;
       base.Dispose(disposing);
     }
   }
