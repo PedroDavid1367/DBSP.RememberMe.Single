@@ -6,19 +6,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer3.Core.Extensions;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity;
-using DBSP.RememberMe.Identity.Model;
 using DBSP.RememberMe.Identity.Helpers;
+using DBSP.RememberMe.Identity.DAL;
 
 namespace DBSP.RememberMe.Identity.Server.Services
 {
   public class CustomUserService : UserServiceBase, IDisposable
   {
-    private readonly UserManager<ApplicationUser> _userManager;
+    //private readonly UserManager<ApplicationUser> _userManager;
+    private UnitOfWork UnitOfWork { get; set; }
+    private bool _disposed = false;
 
-    public CustomUserService(UserManager<ApplicationUser> userManager)
+    //public CustomUserService(UserManager<ApplicationUser> userManager)
+    //{
+    //  _userManager = userManager;
+    //}
+
+    public CustomUserService(UnitOfWork unitOfWork)
     {
-      _userManager = userManager;
+      UnitOfWork = unitOfWork;
     }
 
     public override Task AuthenticateLocalAsync(IdentityServer3.Core.Models.LocalAuthenticationContext context)
@@ -28,9 +34,10 @@ namespace DBSP.RememberMe.Identity.Server.Services
       // 1Q7v1oV7OXIn9Q1kgXayb2KYTjzO64mfxWV2N5K6szjmfNf77NPmyWCD5ZMALkj1VD/VKv8yOZvszDjrE7WXDg==
       var encryptedPassword = HashHelper.Sha512(context.UserName + context.Password);
 
-      var user = _userManager.Users
-        .FirstOrDefault(u => u.UserName == context.UserName &&
-                             u.Password == encryptedPassword);
+      //var user = _userManager.Users
+      //  .FirstOrDefault(u => u.UserName == context.UserName &&
+      //                       u.Password == encryptedPassword);
+      var user = UnitOfWork.UsersRepository.GetUser(context.UserName, encryptedPassword);
 
       if (user == null)
       {
@@ -42,6 +49,8 @@ namespace DBSP.RememberMe.Identity.Server.Services
           //user.Subject,
           user.Id,
           //user.UserClaims.First(c => c.ClaimType == Constants.ClaimTypes.GivenName).ClaimValue);
+
+          // It can be re factorized into an extension method.
           user.Claims.First(c => c.ClaimType == IdentityServer3.Core.Constants.ClaimTypes.GivenName).ClaimValue);
 
       return Task.FromResult(0);
@@ -55,7 +64,8 @@ namespace DBSP.RememberMe.Identity.Server.Services
       }
 
       var subjectId = context.Subject.GetSubjectId();
-      var user = _userManager.Users.FirstOrDefault(u => u.Id == subjectId);
+      //var user = _userManager.Users.FirstOrDefault(u => u.Id == subjectId);
+      var user = UnitOfWork.UsersRepository.GetUserById(subjectId);
 
       // set whether or not the user is active
       context.IsActive = (user != null) && user.IsActive;
@@ -67,7 +77,8 @@ namespace DBSP.RememberMe.Identity.Server.Services
     {
       // find the user
       var subjectId = context.Subject.GetSubjectId();
-      var user = _userManager.Users.FirstOrDefault(u => u.Id == subjectId);
+      //var user = _userManager.Users.FirstOrDefault(u => u.Id == subjectId);
+      var user = UnitOfWork.UsersRepository.GetUserById(subjectId);
 
       // add subject as claim
       var claims = new List<Claim>
@@ -82,7 +93,7 @@ namespace DBSP.RememberMe.Identity.Server.Services
       // only return the requested claims
       if (!context.AllClaimsRequested)
       {
-        claims = claims.Where(x => context.RequestedClaimTypes.Contains(x.Type)).ToList();
+        claims = claims.Where(c => context.RequestedClaimTypes.Contains(c.Type)).ToList();
       }
 
       // set the issued claims - these are the ones that were requested, if available
@@ -91,25 +102,25 @@ namespace DBSP.RememberMe.Identity.Server.Services
       return Task.FromResult(0);
     }
 
-    private bool disposed = false;
-
     public void Dispose()
     {
-      if (!disposed)
-      {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-      }
-
-      disposed = true;
+      System.Diagnostics.Debug.WriteLine("Dispose() was called on CustomerUserService");
+      Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
-    private void Dispose(bool disposing)
+    protected virtual void Dispose(bool disposing)
     {
-      if (disposing && _userManager != null)
+      System.Diagnostics.Debug.WriteLine("Dispose(bool disposing) was called on CustomerUserService");
+      if (!_disposed)
       {
-        _userManager.Dispose();
+        if (disposing)
+        {
+          UnitOfWork.Dispose();
+          UnitOfWork = null;
+        }
       }
+      _disposed = true;
     }
   }
 }

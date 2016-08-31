@@ -29,6 +29,11 @@ namespace DBSP.RememberMe.Identity.DAL.Repositories
         .FirstOrDefault(u => u.UserName == userName && u.Password == password);
     }
 
+    public ApplicationUser GetUserById(string subjectId)
+    {
+      return _userManager.Users.FirstOrDefault(u => u.Id == subjectId);
+    }
+
     public IdentityResult CreateUser(ApplicationUser user, string password)
     {
       return _userManager.Create(user, password);
