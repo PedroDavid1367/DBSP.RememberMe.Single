@@ -7,17 +7,17 @@ using Microsoft.Owin;
 
 namespace DBSP.RememberMe.Identity.DAL.Managers
 {
-  public class ApplicationUserManager : UserManager<ApplicationUser>
+  public class UserManager : UserManager<ApplicationUser>
   {
-    public ApplicationUserManager(IUserStore<ApplicationUser> store)
+    public UserManager(IUserStore<ApplicationUser> store)
         : base(store)
     {
     }
 
-    public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options,
+    public static UserManager Create(IdentityFactoryOptions<UserManager> options,
       IOwinContext context)
     {
-      var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+      var manager = new UserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
       // Configure validation logic for usernames
       manager.UserValidator = new UserValidator<ApplicationUser>(manager)
       {

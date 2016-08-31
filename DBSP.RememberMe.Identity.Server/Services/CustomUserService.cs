@@ -8,6 +8,8 @@ using IdentityServer3.Core.Extensions;
 using System.Security.Claims;
 using DBSP.RememberMe.Identity.Helpers;
 using DBSP.RememberMe.Identity.DAL;
+using Microsoft.Owin;
+using DBSP.RememberMe.Identity.DAL.Repositories;
 
 namespace DBSP.RememberMe.Identity.Server.Services
 {

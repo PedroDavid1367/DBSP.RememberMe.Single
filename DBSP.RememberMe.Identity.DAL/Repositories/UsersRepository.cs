@@ -15,10 +15,10 @@ namespace DBSP.RememberMe.Identity.DAL.Repositories
   public class UsersRepository : IDisposable
   {
     // TODO: Check if makes sense to use readonly.
-    private ApplicationUserManager _userManager;
+    private UserManager<ApplicationUser> _userManager;
     private bool _disposed = false;
 
-    public UsersRepository(ApplicationUserManager userManager)
+    public UsersRepository(UserManager<ApplicationUser> userManager)
     {
       _userManager = userManager;
     }
@@ -47,7 +47,7 @@ namespace DBSP.RememberMe.Identity.DAL.Repositories
     public static UsersRepository Create(IdentityFactoryOptions<UsersRepository> options, 
       IOwinContext context)
     {
-      return new UsersRepository(context.Get<ApplicationUserManager>());
+      return new UsersRepository(context.Get<UserManager>());
     }
 
     public void Dispose()

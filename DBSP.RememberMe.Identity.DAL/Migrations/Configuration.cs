@@ -19,7 +19,7 @@ namespace DBSP.RememberMe.Identity.DAL.Migrations
     {
       var store = new UserStore<ApplicationUser>(context);
       //var manager = new UserManager<ApplicationUser>(store);
-      var manager = new ApplicationUserManager(store);
+      var manager = new UserManager(store);
 
       if (!context.Users.Any(u => u.UserName == "Kevin"))
       {
