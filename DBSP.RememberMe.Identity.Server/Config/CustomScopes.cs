@@ -11,7 +11,18 @@ namespace DBSP.RememberMe.Identity.Server.Config
       {
         StandardScopes.OpenId,
         StandardScopes.ProfileAlwaysInclude,
-        StandardScopes.Address,
+        //StandardScopes.Address,
+        new Scope
+        {
+          Name = "addresses",
+          DisplayName = "Address",
+          Description = "Allow the application to see your address(es).",
+          Type = ScopeType.Identity,
+          Claims = new List<ScopeClaim>()
+          {
+            new ScopeClaim("address", true)
+          },
+        },
         new Scope
         {
           Name = "gallerymanagement",
