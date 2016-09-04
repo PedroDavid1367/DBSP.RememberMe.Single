@@ -20,7 +20,8 @@ namespace DBSP.RememberMe.Identity.Server
   {
     public void Configuration(IAppBuilder app)
     {
-      // Configure the db context and user manager to use a single instance per request
+      // Configuring the db context, user manager, users repository and unit of work
+      // to use a single instance per request.
       app.CreatePerOwinContext(ApplicationDbContext.Create);
       app.CreatePerOwinContext<UserManager>(UserManager.Create);
       app.CreatePerOwinContext<UsersRepository>(UsersRepository.Create);
@@ -30,23 +31,27 @@ namespace DBSP.RememberMe.Identity.Server
       {
         var corsPolicyService = new DefaultCorsPolicyService()
         {
+          // Anyone is allowed to make a request.
           AllowAll = true
         };
 
         var defaultViewServiceOptions = new DefaultViewServiceOptions();
         defaultViewServiceOptions.CacheViews = false;
 
+        // Setting up Identity Server Service.
         var idServerServiceFactory = new IdentityServerServiceFactory()
                               .UseInMemoryClients(CustomClients.Get())
                               .UseInMemoryScopes(CustomScopes.Get());
-        //.UseInMemoryUsers(CustomUsers.Get());
+                            //.UseInMemoryUsers(CustomUsers.Get());
 
         idServerServiceFactory.CorsPolicyService = new
                   Registration<IdentityServer3.Core.Services.ICorsPolicyService>(corsPolicyService);
 
         idServerServiceFactory.ConfigureDefaultViewService(defaultViewServiceOptions);
 
+        // Registrations on Identity Server Service.
         idServerServiceFactory.Register(new Registration<ApplicationDbContext>());
+
         idServerServiceFactory.Register(new Registration<UserStore<ApplicationUser>>(resolver =>
         {
           return new UserStore<ApplicationUser>(resolver.Resolve<ApplicationDbContext>());
@@ -70,6 +75,7 @@ namespace DBSP.RememberMe.Identity.Server
 
         idServerServiceFactory.UserService = new Registration<IUserService, CustomUserService>();
 
+        // Setting up Identity Server options.
         var options = new IdentityServerOptions
         {
           Factory = idServerServiceFactory,
