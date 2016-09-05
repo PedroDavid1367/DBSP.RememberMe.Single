@@ -2,6 +2,7 @@
 using DBSP.RememberMe.API.Model;
 using DBSP.RememberMe.API.Server.Helpers;
 using System;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.OData;
@@ -9,7 +10,7 @@ using System.Web.OData;
 namespace DBSP.RememberMe.API.Server.Controllers
 {
   [Authorize]
-  [EnableCors("http://localhost:8080 , http://localhost:8888", "*", "GET, POST, PATCH")]
+  //[EnableCors(origins: "http://localhost:8080 , http://localhost:8888", headers: "*", methods: "*")]
   public class NotesController : ODataController
   {
     //private RememberMeDbContext _ctx = new RememberMeDbContext();
@@ -28,7 +29,6 @@ namespace DBSP.RememberMe.API.Server.Controllers
     [EnableQuery(MaxExpansionDepth = 3, MaxSkip = 10, MaxTop = 5, PageSize = 4)]
     public IHttpActionResult Get()
     {
-      //return Ok(_ctx.Notes);
       var notes = UnitOfWork.NotesManager.GetNotes();
       return Ok(notes);
     }
@@ -44,8 +44,6 @@ namespace DBSP.RememberMe.API.Server.Controllers
 
         string ownerId = TokenIdentityHelper.GetOwnerIdFromToken();
         note.OwnerId = ownerId;
-        //var createdNote = _ctx.Notes.Add(note);
-        //_ctx.SaveChanges();
         var createdNote = UnitOfWork.NotesManager.AddNote(note);
         UnitOfWork.Complete();
 
@@ -55,6 +53,29 @@ namespace DBSP.RememberMe.API.Server.Controllers
       {
         return InternalServerError();
       }      
+    }
+
+    public IHttpActionResult Delete([FromODataUri] int key)
+    {
+      try
+      {
+        var note = UnitOfWork.NotesManager.GetNoteById(key);
+
+        if (note == null)
+        {
+          return NotFound();
+        }
+
+        UnitOfWork.NotesManager.RemoveNote(note);
+        UnitOfWork.Complete();
+
+        return StatusCode(HttpStatusCode.NoContent);
+      }
+      catch (Exception)
+      {
+
+        return InternalServerError();
+      }
     }
 
     protected override void Dispose(bool disposing)

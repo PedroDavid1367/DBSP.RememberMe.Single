@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.OData.Builder;
 using System.Web.OData.Extensions;
 
@@ -18,7 +19,8 @@ namespace DBSP.RememberMe.API.Server.Configuration
 
       config.MapODataServiceRoute("ODataRoute", "odata", GetEdmModel());
 
-      config.EnableCors();
+      var cors = new EnableCorsAttribute("*", "*", "*");
+      config.EnableCors(cors);
       config.EnsureInitialized();
 
       return config;

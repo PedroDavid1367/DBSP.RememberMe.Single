@@ -27,6 +27,16 @@ namespace DBSP.RememberMe.API.DAL.Managers
       return _db.Notes.Add(note);
     }
 
+    public Note GetNoteById(int id)
+    {
+      return _db.Notes.FirstOrDefault(n => n.Id == id);
+    }
+
+    public void RemoveNote(Note note)
+    {
+      _db.Notes.Remove(note);
+    }
+
     //public IQueryable QueryPersonById(int id)
     //{
     //  var query = _db.Persons.Where(p => p.Id == id);
