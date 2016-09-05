@@ -18,10 +18,8 @@ namespace DBSP.RememberMe.API.Server.Configuration
 
       config.MapODataServiceRoute("ODataRoute", "odata", GetEdmModel());
 
-      //config.EnableCors();
       config.EnableCors();
-      //config.MapHttpAttributeRoutes();
-      //config.EnsureInitialized();
+      config.EnsureInitialized();
 
       return config;
     }

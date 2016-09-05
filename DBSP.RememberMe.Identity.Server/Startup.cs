@@ -84,10 +84,10 @@ namespace DBSP.RememberMe.Identity.Server
           // TODO: Get valid SSL certificates.
           RequireSsl = false,
 
-          SiteName = "Security Service Token for RememberMe application.",
+          SiteName = DBSP.RememberMe.Identity.Constants.SiteName,
           SigningCertificate = LoadCertificate(),
-          IssuerUri = DBSP.RememberMe.Identity.Constants.TripGalleryIssuerUri,
-          PublicOrigin = DBSP.RememberMe.Identity.Constants.TripGallerySTSOrigin,
+          IssuerUri = DBSP.RememberMe.Identity.Constants.RememberMeIssuerUri,
+          PublicOrigin = DBSP.RememberMe.Identity.Constants.RememberMeSTSOrigin,
           AuthenticationOptions = new AuthenticationOptions()
           {
             EnablePostSignOutAutoRedirect = true,

@@ -50,6 +50,27 @@ namespace DBSP.RememberMe.Identity.Server.Config
           {
             TripGalleryImplicitAngular2.PostLogoutUri,
           }
+        },
+        new Client
+        {
+          ClientId = RememberMeImplicit.ClientId,
+          ClientName = RememberMeImplicit.ClientName,
+          Flow = RememberMeImplicit.Flow,
+          AllowAccessToAllScopes = RememberMeImplicit.AllowAccessToAllScopes,
+          //IdentityTokenLifetime = 10,
+          //AccessTokenLifetime = 120,
+          RequireConsent = RememberMeImplicit.RequireConsent,
+
+          RedirectUris = new List<string>
+          {
+            RememberMeImplicit.RedirectUriCallback,
+            RememberMeImplicit.RedirectUriRefresh,
+          },
+
+          PostLogoutRedirectUris = new List<string>()
+          {
+            RememberMeImplicit.PostLogoutUri,
+          }
         }
       };
     }

@@ -220,6 +220,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Config\Clients\RememberMeImplicit.cs" />
     <Compile Include="Config\Clients\TripGalleryImplicit.cs" />
     <Compile Include="Config\Clients\TripGalleryImplicitAngular2.cs" />
     <Compile Include="Config\CustomClients.cs" />

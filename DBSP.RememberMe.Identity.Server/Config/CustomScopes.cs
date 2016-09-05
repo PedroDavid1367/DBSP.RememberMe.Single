@@ -25,9 +25,9 @@ namespace DBSP.RememberMe.Identity.Server.Config
         },
         new Scope
         {
-          Name = "gallerymanagement",
-          DisplayName = "Gallery Management",
-          Description = "Allow the application to manage galleries on your behalf.",
+          Name = "notesmanagement",
+          DisplayName = "RememberMe Management",
+          Description = "Allow the application to manage all RememberMe features on your behalf.",
           Type = ScopeType.Resource,
           Claims = new List<ScopeClaim>()
           {

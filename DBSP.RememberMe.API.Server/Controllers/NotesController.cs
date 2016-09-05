@@ -9,7 +9,7 @@ using System.Web.OData;
 namespace DBSP.RememberMe.API.Server.Controllers
 {
   [Authorize]
-  [EnableCors("http://localhost:15745 , http://localhost:8080", "*", "GET, POST, PATCH")]
+  [EnableCors("http://localhost:8080 , http://localhost:8888", "*", "GET, POST, PATCH")]
   public class NotesController : ODataController
   {
     //private RememberMeDbContext _ctx = new RememberMeDbContext();

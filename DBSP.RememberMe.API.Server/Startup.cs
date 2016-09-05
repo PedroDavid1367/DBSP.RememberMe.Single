@@ -18,8 +18,9 @@ namespace DBSP.RememberMe.API.Server
       app.UseIdentityServerBearerTokenAuthentication(
        new IdentityServerBearerTokenAuthenticationOptions
        {
-         Authority = DBSP.RememberMe.API.Constants.TripGallerySTS,
-         RequiredScopes = new[] { "gallerymanagement" },
+         Authority = DBSP.RememberMe.API.Constants.RememberMeSTS,
+         // Re factorize this scope to notes, reminders and contacts.
+         RequiredScopes = new[] { "notesmanagement" },
        });
 
       var config = WebApiConfig.Register();
