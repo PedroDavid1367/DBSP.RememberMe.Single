@@ -19,7 +19,7 @@ namespace DBSP.RememberMe.API.Server.Configuration
 
       config.MapODataServiceRoute("ODataRoute", "odata", GetEdmModel());
 
-      var cors = new EnableCorsAttribute("*", "*", "*");
+      var cors = new EnableCorsAttribute("http://localhost:8080 , http://localhost:8888", "*", "*");
       config.EnableCors(cors);
       config.EnsureInitialized();
 

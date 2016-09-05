@@ -13,7 +13,6 @@ namespace DBSP.RememberMe.API.Server.Controllers
   //[EnableCors(origins: "http://localhost:8080 , http://localhost:8888", headers: "*", methods: "*")]
   public class NotesController : ODataController
   {
-    //private RememberMeDbContext _ctx = new RememberMeDbContext();
     private UnitOfWork UnitOfWork { get; set; }
     private bool _disposed;
 
@@ -55,6 +54,36 @@ namespace DBSP.RememberMe.API.Server.Controllers
       }      
     }
 
+    public IHttpActionResult Patch([FromODataUri] int key, Delta<Note> patch)
+    {
+      try
+      {
+        if (!ModelState.IsValid)
+        {
+          return BadRequest(ModelState);
+        }
+
+        var note = UnitOfWork.NotesManager.GetNoteById(key);
+
+        if (note == null)
+        {
+          return NotFound();
+        }
+
+        // So that no one can change Id.
+        var id = note.Id;
+        patch.Patch(note);
+        note.Id = id;
+        UnitOfWork.Complete();
+
+        return StatusCode(HttpStatusCode.NoContent);
+      }
+      catch (Exception)
+      {
+        return InternalServerError();
+      }
+    }
+
     public IHttpActionResult Delete([FromODataUri] int key)
     {
       try
@@ -77,6 +106,8 @@ namespace DBSP.RememberMe.API.Server.Controllers
         return InternalServerError();
       }
     }
+
+
 
     protected override void Dispose(bool disposing)
     {
