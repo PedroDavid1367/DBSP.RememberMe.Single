@@ -10,7 +10,6 @@ using System.Web.OData;
 namespace DBSP.RememberMe.API.Server.Controllers
 {
   [Authorize]
-  //[EnableCors(origins: "http://localhost:8080 , http://localhost:8888", headers: "*", methods: "*")]
   public class NotesController : ODataController
   {
     private UnitOfWork UnitOfWork { get; set; }
