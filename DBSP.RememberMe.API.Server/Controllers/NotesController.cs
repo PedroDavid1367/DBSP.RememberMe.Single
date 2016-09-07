@@ -2,10 +2,12 @@
 using DBSP.RememberMe.API.Model;
 using DBSP.RememberMe.API.Server.Helpers;
 using System;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.OData;
+using System.Web.OData.Routing;
 
 namespace DBSP.RememberMe.API.Server.Controllers
 {
@@ -24,7 +26,7 @@ namespace DBSP.RememberMe.API.Server.Controllers
       UnitOfWork = unitOfWork;
     }
 
-    [EnableQuery(MaxExpansionDepth = 3, MaxSkip = 10, MaxTop = 5, PageSize = 4)]
+    [EnableQuery(MaxExpansionDepth = 3, MaxTop = 5, PageSize = 4)]
     public IHttpActionResult Get()
     {
       var notes = UnitOfWork.NotesManager.GetNotes();
@@ -101,12 +103,26 @@ namespace DBSP.RememberMe.API.Server.Controllers
       }
       catch (Exception)
       {
-
         return InternalServerError();
       }
     }
 
-
+    [HttpGet]
+    [ODataRoute("Notes/RememberMe.Functions.GetNotesCount()")]
+    public IHttpActionResult GetNotesCount()
+    {
+      // Gets the number of notes contained in the db.
+      var count = 0;
+      try
+      {
+        count = UnitOfWork.NotesManager.GetNotes().ToList().Count;
+      }
+      catch (Exception)
+      {
+        return InternalServerError();
+      }
+      return Ok(count);
+    }
 
     protected override void Dispose(bool disposing)
     {
