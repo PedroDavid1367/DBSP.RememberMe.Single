@@ -36,22 +36,5 @@ namespace DBSP.RememberMe.API.DAL.Managers
     {
       _db.Notes.Remove(note);
     }
-
-    //public IQueryable QueryPersonById(int id)
-    //{
-    //  var query = _db.Persons.Where(p => p.Id == id);
-    //  return query.Any() ? query : null;
-    //}
-
-    //public IQueryable QueryPersonByName(string name)
-    //{
-    //  var query = _db.Persons.Where(p => p.Name == name);
-    //  return query.Any() ? query : null;
-    //}
-
-    //public Person AddPerson(Person person)
-    //{
-    //  return _db.Persons.Add(person);
-    //}
   }
 }

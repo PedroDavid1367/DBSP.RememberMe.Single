@@ -11,6 +11,7 @@ namespace DBSP.RememberMe.API.DAL
   public class RememberMeDbContext : DbContext
   {
     public DbSet<Note> Notes { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
 
     public RememberMeDbContext() : base("RememberMeAPI")
     {
@@ -21,31 +22,7 @@ namespace DBSP.RememberMe.API.DAL
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
       modelBuilder.Entity<Note>();
+      modelBuilder.Entity<Contact>();
     }
   }
-
-  //public class AirVinylDbContext : DbContext
-  //{
-  //  public DbSet<Person> People { get; set; }
-  //  public DbSet<VinylRecord> VinylRecords { get; set; }
-  //  public DbSet<RecordStore> RecordStores { get; set; }
-  //  public DbSet<PressingDetail> PressingDetails { get; set; }
-
-  //  public AirVinylDbContext() : base("ODataV4AirVinyl")
-  //  {
-  //    //Database.SetInitializer(new AirVinylDBInitializer());
-  //    // disable lazy loading
-  //    Configuration.LazyLoadingEnabled = false;
-  //  }
-
-  //  protected override void OnModelCreating(DbModelBuilder modelBuilder)
-  //  {
-  //    // ensure the same person can be added to different collections
-  //    // of friends (self-referencing many-to-many relationship)
-  //    modelBuilder.Entity<Person>().HasMany(m => m.Friends).WithMany();
-
-  //    modelBuilder.Entity<Person>().HasMany(p => p.VinylRecords)
-  //        .WithRequired(r => r.Person).WillCascadeOnDelete(true);
-  //  }
-  //}
 }

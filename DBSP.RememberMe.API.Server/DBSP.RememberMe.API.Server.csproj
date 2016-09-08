@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\WebApiConfig.cs" />
+    <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Helpers\ODataHelpers.cs" />
     <Compile Include="Helpers\TokenIdentityHelper.cs" />

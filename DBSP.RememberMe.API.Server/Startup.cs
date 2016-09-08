@@ -28,29 +28,4 @@ namespace DBSP.RememberMe.API.Server
       app.UseWebApi(config);
     }
   }
-
-  //public static class WebApiConfig
-  //{
-  //  public static HttpConfiguration Register()
-  //  {
-  //    var config = new HttpConfiguration();
-
-  //    config.MapODataServiceRoute("ODataRoute", "odata", GetEdmModel());
-
-  //    return config;
-  //  }
-
-  //  private static IEdmModel GetEdmModel()
-  //  {
-  //    var builder = new ODataConventionModelBuilder();
-  //    builder.Namespace = "AirVinyl";
-  //    builder.ContainerName = "AirVinylContainer";
-
-  //    builder.EntitySet<Person>("People");
-  //    builder.EntitySet<VinylRecord>("VinylRecords");
-  //    builder.EntitySet<RecordStore>("RecordStores");
-
-  //    return builder.GetEdmModel();
-  //  }
-  //}
 }

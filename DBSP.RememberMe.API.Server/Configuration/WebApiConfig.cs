@@ -33,10 +33,15 @@ namespace DBSP.RememberMe.API.Server.Configuration
       builder.ContainerName = "RememberMeContainer";
 
       builder.EntitySet<Note>("Notes");
+      builder.EntitySet<Contact>("Contacts");
 
       var getNotesCount = builder.EntityType<Note>().Collection.Function("GetNotesCount");
       getNotesCount.Returns<int>();
       getNotesCount.Namespace = "RememberMe.Functions";
+
+      var getContactsCount = builder.EntityType<Contact>().Collection.Function("GetContactsCount");
+      getContactsCount.Returns<int>();
+      getContactsCount.Namespace = "RememberMe.Functions";
 
       return builder.GetEdmModel();
     }

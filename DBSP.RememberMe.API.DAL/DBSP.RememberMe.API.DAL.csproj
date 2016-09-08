@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Managers\ContactsManager.cs" />
     <Compile Include="Managers\NotesManager.cs" />
     <Compile Include="Migrations\201608271401398_InitialSetup.cs" />
     <Compile Include="Migrations\201608271401398_InitialSetup.Designer.cs">
@@ -57,6 +58,10 @@
     <Compile Include="Migrations\201608290108418_SetupOwnerIdNotRequired.cs" />
     <Compile Include="Migrations\201608290108418_SetupOwnerIdNotRequired.Designer.cs">
       <DependentUpon>201608290108418_SetupOwnerIdNotRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609081755343_ContactsInitialSetup.cs" />
+    <Compile Include="Migrations\201609081755343_ContactsInitialSetup.Designer.cs">
+      <DependentUpon>201609081755343_ContactsInitialSetup.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +84,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608290108418_SetupOwnerIdNotRequired.resx">
       <DependentUpon>201608290108418_SetupOwnerIdNotRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609081755343_ContactsInitialSetup.resx">
+      <DependentUpon>201609081755343_ContactsInitialSetup.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

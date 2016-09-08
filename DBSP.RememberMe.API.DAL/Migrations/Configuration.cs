@@ -34,6 +34,35 @@ namespace DBSP.RememberMe.API.DAL.Migrations
           OwnerId = "W3C"
         }
       );
+
+      context.Contacts.AddOrUpdate(c => c.Name,
+        new Contact()
+        {
+          Name = "Ariel",
+          Email = "ariel@hotmail.com",
+          Phone = "4431300",
+          Organization = "Home",
+          Misc = "2nd"
+        },
+
+        new Contact()
+        {
+          Name = "Rodrigo",
+          Email = "rodrigo@hotmail.com",
+          Phone = "4431300",
+          Organization = "Home",
+          Misc = "3rd"
+        },
+
+        new Contact()
+        {
+          Name = "Erwin",
+          Email = "erwin@hotmail.com",
+          Phone = "4431300",
+          Organization = "Home",
+          Misc = "4th"
+        }
+      );
     }
   }
 }

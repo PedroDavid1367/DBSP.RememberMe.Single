@@ -8,12 +8,14 @@ namespace DBSP.RememberMe.API.DAL
   {
     private RememberMeDbContext _db;
     public NotesManager NotesManager { get; private set; }
+    public ContactsManager ContactsManager { get; private set; }
     private bool _disposed = false;
 
     public UnitOfWork()
     {
       _db = new RememberMeDbContext();
       NotesManager = new NotesManager(_db);
+      ContactsManager = new ContactsManager(_db);
     }
 
     public void Complete()
