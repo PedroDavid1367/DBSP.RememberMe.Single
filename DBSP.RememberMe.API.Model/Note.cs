@@ -28,5 +28,8 @@ namespace DBSP.RememberMe.API.Model
 
     [Required]
     public int Priority { get; set; }
+
+    [Required]
+    public long ScheduleTime { get; set; }
   }
 }

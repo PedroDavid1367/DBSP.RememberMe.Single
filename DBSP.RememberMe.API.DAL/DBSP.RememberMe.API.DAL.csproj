@@ -63,6 +63,10 @@
     <Compile Include="Migrations\201609081755343_ContactsInitialSetup.Designer.cs">
       <DependentUpon>201609081755343_ContactsInitialSetup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609121941359_AddedScheduleTimeForNote.cs" />
+    <Compile Include="Migrations\201609121941359_AddedScheduleTimeForNote.Designer.cs">
+      <DependentUpon>201609121941359_AddedScheduleTimeForNote.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RememberMeDbContext.cs" />
@@ -87,6 +91,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609081755343_ContactsInitialSetup.resx">
       <DependentUpon>201609081755343_ContactsInitialSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609121941359_AddedScheduleTimeForNote.resx">
+      <DependentUpon>201609121941359_AddedScheduleTimeForNote.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
