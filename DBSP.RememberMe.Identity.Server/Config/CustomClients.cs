@@ -69,7 +69,7 @@ namespace DBSP.RememberMe.Identity.Server.Config
 
           PostLogoutRedirectUris = new List<string>()
           {
-            RememberMeImplicit.PostLogoutUri,
+            RememberMeImplicit.PostLogoutUri
           }
         }
       };

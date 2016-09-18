@@ -13,6 +13,6 @@ namespace DBSP.RememberMe.Identity.Server.Config.Clients
     public const string RedirectUriCallback = "http://localhost:15745/callback.html";
     public const string RedirectUriRefresh = "http://localhost:15745/silentrefreshframe.html";
 
-    public const string PostLogoutUri = "http://localhost:15745/index.html";
+    public const string PostLogoutUri = "http://localhost:15745/";
   }
 }

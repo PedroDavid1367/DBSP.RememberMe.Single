@@ -29,8 +29,16 @@ namespace DBSP.RememberMe.API.Server.Controllers
     [EnableQuery(MaxExpansionDepth = 3, MaxTop = 5, PageSize = 4)]
     public IHttpActionResult Get()
     {
-      var notes = UnitOfWork.NotesManager.GetNotes();
-      return Ok(notes);
+      try
+      {
+        string ownerId = TokenIdentityHelper.GetOwnerIdFromToken();
+        var notes = UnitOfWork.NotesManager.GetNotes(ownerId);
+        return Ok(notes);
+      }
+      catch (Exception)
+      {
+        return InternalServerError();
+      }
     }
 
     public IHttpActionResult Post(Note note)
@@ -43,8 +51,8 @@ namespace DBSP.RememberMe.API.Server.Controllers
         }
 
         string ownerId = TokenIdentityHelper.GetOwnerIdFromToken();
-        note.OwnerId = ownerId;
-        var createdNote = UnitOfWork.NotesManager.AddNote(note);
+        //note.OwnerId = ownerId;
+        var createdNote = UnitOfWork.NotesManager.AddNote(ownerId, note);
         UnitOfWork.Complete();
 
         return Created(createdNote);
@@ -64,12 +72,21 @@ namespace DBSP.RememberMe.API.Server.Controllers
           return BadRequest(ModelState);
         }
 
-        var note = UnitOfWork.NotesManager.GetNoteById(key);
+        string ownerId = TokenIdentityHelper.GetOwnerIdFromToken();
 
-        if (note == null)
+        var tuple = UnitOfWork.NotesManager.GetNoteById(ownerId, key);
+
+        if (tuple.Item1 == null && tuple.Item2 == false)
         {
           return NotFound();
         }
+
+        if (tuple.Item1 != null && tuple.Item2 == false)
+        {
+          return StatusCode(HttpStatusCode.Forbidden);
+        }
+
+        var note = tuple.Item1;
 
         // So that no one can change Id.
         var id = note.Id;
@@ -89,12 +106,21 @@ namespace DBSP.RememberMe.API.Server.Controllers
     {
       try
       {
-        var note = UnitOfWork.NotesManager.GetNoteById(key);
+        string ownerId = TokenIdentityHelper.GetOwnerIdFromToken();
 
-        if (note == null)
+        var tuple = UnitOfWork.NotesManager.GetNoteById(ownerId, key);
+
+        if (tuple.Item1 == null && tuple.Item2 == false)
         {
           return NotFound();
         }
+
+        if (tuple.Item1 != null && tuple.Item2 == false)
+        {
+          return StatusCode(HttpStatusCode.Forbidden);
+        }
+
+        var note = tuple.Item1;
 
         UnitOfWork.NotesManager.RemoveNote(note);
         UnitOfWork.Complete();
@@ -115,7 +141,9 @@ namespace DBSP.RememberMe.API.Server.Controllers
       var count = 0;
       try
       {
-        count = UnitOfWork.NotesManager.GetNotes().ToList().Count;
+        string ownerId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+        count = UnitOfWork.NotesManager.GetNotes(ownerId).ToList().Count;
       }
       catch (Exception)
       {
