@@ -41,6 +41,35 @@ namespace DBSP.RememberMe.API.Server.Controllers
       }
     }
 
+    [EnableQuery(MaxExpansionDepth = 3)]
+    public IHttpActionResult Get([FromODataUri] int key)
+    {
+      try
+      {
+        string ownerId = TokenIdentityHelper.GetOwnerIdFromToken();
+
+        var tuple = UnitOfWork.NotesManager.GetNoteAsQueryById(ownerId, key);
+
+        if (tuple.Item1 == null && tuple.Item2 == false)
+        {
+          return NotFound();
+        }
+
+        if (tuple.Item1 != null && tuple.Item2 == false)
+        {
+          return StatusCode(HttpStatusCode.Forbidden);
+        }
+
+        var note = tuple.Item1;
+
+        return Ok(SingleResult.Create(note));
+      }
+      catch (Exception)
+      {
+        return InternalServerError();
+      }
+    }
+
     public IHttpActionResult Post(Note note)
     {
       try

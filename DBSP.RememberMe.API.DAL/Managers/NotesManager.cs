@@ -64,6 +64,27 @@ namespace DBSP.RememberMe.API.DAL.Managers
       return res;
     }
 
+    public Tuple<IQueryable<Note>, bool> GetNoteAsQueryById(string ownerId, int id)
+    {
+      var res = new Tuple<IQueryable<Note>, bool>(null, false);
+
+      // A note exist and the ownerId is valid.
+      var validNote = _db.Notes.Where(n => n.Id == id && n.OwnerId == ownerId);
+      if (validNote != null)
+      {
+        return new Tuple<IQueryable<Note>, bool>(validNote, true);
+      }
+
+      // A note exist and the ownerId is invalid.
+      var invalidNote = _db.Notes.Where(n => n.Id == id);
+      if (invalidNote != null)
+      {
+        return new Tuple<IQueryable<Note>, bool>(invalidNote, false);
+      }
+
+      return res;
+    }
+
     public void RemoveNote(Note note)
     {
       _db.Notes.Remove(note);
