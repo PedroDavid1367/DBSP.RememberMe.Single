@@ -10,6 +10,7 @@ using IdentityServer3.Core.Services.Default;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Owin;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
@@ -20,6 +21,12 @@ namespace DBSP.RememberMe.Identity.Server
   {
     public void Configuration(IAppBuilder app)
     {
+      // Logging for production test.
+      Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Debug()
+        .WriteTo.Trace()
+        .CreateLogger();
+
       // Configuring the db context, user manager, users repository and unit of work
       // to use a single instance per request.
       app.CreatePerOwinContext(ApplicationDbContext.Create);
@@ -27,7 +34,7 @@ namespace DBSP.RememberMe.Identity.Server
       app.CreatePerOwinContext<UsersRepository>(UsersRepository.Create);
       app.CreatePerOwinContext<UnitOfWork>(UnitOfWork.Create);
 
-      app.Map("/identity", idsrvApp =>
+      app.Map("/sts/identity", idsrvApp =>
       {
         var corsPolicyService = new DefaultCorsPolicyService()
         {

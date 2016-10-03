@@ -15,7 +15,7 @@ namespace DBSP.RememberMe.Identity.Server
 
       routes.MapRoute(
           name: "Default",
-          url: "identity/{controller}/{action}/{id}",
+          url: "sts/identity/{controller}/{action}/{id}",
           defaults: new { action = "Index", id = UrlParameter.Optional }
       );
     }
