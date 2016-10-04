@@ -34,7 +34,7 @@ namespace DBSP.RememberMe.Identity.Server
       app.CreatePerOwinContext<UsersRepository>(UsersRepository.Create);
       app.CreatePerOwinContext<UnitOfWork>(UnitOfWork.Create);
 
-      app.Map("/sts/identity", idsrvApp =>
+      app.Map("/identity", idsrvApp =>
       {
         var corsPolicyService = new DefaultCorsPolicyService()
         {
